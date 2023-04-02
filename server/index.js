@@ -1,8 +1,20 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const authRouter = require("./routes/auth");
 
-const PORT = process.env.PORT || 3001;
+
+const PORT = process.env.PORT | 3001;
 const app = express();
+
+app.use(express.json())
+app.use(authRouter);
+
+const DBUrl = "mongodb://127.0.0.1:27017/tuhin";
+mongoose.connect(DBUrl)
+    .then(() => {
+        console.log("data is connect db")
+    });
+
 
 
 app.listen(PORT, "0.0.0.0", () => {
