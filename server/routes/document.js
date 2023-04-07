@@ -14,10 +14,17 @@ let document = new Document({
 });
 document = await document.save();
 res.json(document);
-}catch(e){
-res.status(500).json({ error: e.message });
+}catch(error){
+res.status(500).json({ error: error.message });
 }
 });
 
-
+documentRouter.get("/docs/me", auth, async (req, res)=> {
+    try {
+        let document = await Document.find({uid: req.user});
+        res.json(document);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 module.exports = documentRouter;

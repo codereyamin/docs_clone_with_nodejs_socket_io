@@ -19,7 +19,7 @@ class DocumentRepository {
   DocumentRepository({required Client client}) : _client = client;
 
   Future<ErrorModel> createDocument(String token) async {
-    ErrorModel error = ErrorModel(error: "some error", data: null);
+    ErrorModel error = ErrorModel(error: "some unexpected error occurred", data: null);
     try {
       var res = await _client.post(
         Uri.parse("$host/doc/create"),
@@ -34,6 +34,45 @@ class DocumentRepository {
       switch (res.statusCode) {
         case 200:
           error = ErrorModel(error: null, data: DocumentModel.fromJson(res.body));
+
+          break;
+
+        default:
+          error = ErrorModel(error: res.body, data: null);
+          break;
+      }
+    } catch (err) {
+      error = ErrorModel(error: err.toString(), data: null);
+    }
+
+    return error;
+  }
+
+  Future<ErrorModel> getDocument(String token) async {
+    ErrorModel error = ErrorModel(error: "some unexpected error occurred", data: null);
+    try {
+      var res = await _client.get(
+        Uri.parse("$host/docs/me"),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
+          "x-auth-token": token
+        },
+      );
+
+      switch (res.statusCode) {
+        case 200:
+          List<DocumentModel> documents = [];
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            documents.add(
+              DocumentModel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body[i]),
+                ),
+              ),
+            );
+          }
+          error = ErrorModel(error: null, data: documents);
 
           break;
 
