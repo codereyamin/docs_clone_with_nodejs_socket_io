@@ -8,6 +8,7 @@ class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
   void signOut(WidgetRef ref) {
     ref.read(authRepositoryProvider).signOut();
+    ref.read(userProvider.notifier).update((state) => null);
   }
 
   @override
@@ -21,9 +22,7 @@ class HomeScreen extends ConsumerWidget {
               color: cBlackColor,
             )),
         IconButton(
-            onPressed: () {
-              signOut(ref);
-            },
+            onPressed: () => signOut(ref),
             icon: const Icon(
               Icons.logout,
               color: cRedColor,
