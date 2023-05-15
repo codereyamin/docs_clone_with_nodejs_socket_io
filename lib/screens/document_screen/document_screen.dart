@@ -1,7 +1,12 @@
+import 'package:docs_clone_with_nodejs_socket_io/repository/auth_repository.dart';
+import 'package:docs_clone_with_nodejs_socket_io/repository/document_repository.dart';
 import 'package:docs_clone_with_nodejs_socket_io/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../models/document_model.dart';
+import '../../models/error_model.dart';
 
 class DocumentScreen extends ConsumerStatefulWidget {
   final String id;
@@ -14,11 +19,34 @@ class DocumentScreen extends ConsumerStatefulWidget {
 class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titleTextEditingController = TextEditingController(text: "unTitle");
   final quill.QuillController _controller = quill.QuillController.basic();
+  ErrorModel? errorModel;
+  @override
+  void initState() {
+    fetchDocumentData();
+    super.initState();
+  }
 
   @override
   void dispose() {
     titleTextEditingController.dispose();
     super.dispose();
+  }
+
+  fetchDocumentData() async {
+    errorModel = await ref
+        .read(documentRepositoryProvider)
+        .getDocumentById(ref.read(userProvider)!.token, widget.id);
+
+    if (errorModel!.data != null) {
+      titleTextEditingController.text = (errorModel!.data as DocumentModel).title;
+      setState(() {});
+    }
+  }
+
+  void updateTitle(WidgetRef ref, String title) {
+    ref
+        .read(documentRepositoryProvider)
+        .updateTitle(token: ref.read(userProvider)!.token, id: widget.id, title: title);
   }
 
   @override
@@ -56,13 +84,14 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                 width: 300,
                 child: TextField(
                   controller: titleTextEditingController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: cBlueColor),
                     ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(left: 10),
                   ),
+                  onSubmitted: (value) => updateTitle(ref, value),
                 ))
           ]),
         ),
@@ -77,7 +106,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
         child: Column(
           children: [
             quill.QuillToolbar.basic(controller: _controller),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Expanded(

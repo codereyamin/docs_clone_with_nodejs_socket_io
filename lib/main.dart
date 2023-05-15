@@ -1,12 +1,11 @@
 import 'package:docs_clone_with_nodejs_socket_io/models/error_model.dart';
 import 'package:docs_clone_with_nodejs_socket_io/repository/auth_repository.dart';
-import 'package:docs_clone_with_nodejs_socket_io/screens/home/home_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'routers/router.dart';
-import 'screens/login/login_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
