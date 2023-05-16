@@ -1,5 +1,13 @@
 {
-  "cSpell.words": ["middlerwares", "RGBO", "riverpod", "Routemaster"],
+  "cSpell.words": [
+    "Cupertino",
+    "middlerwares",
+    "RGBO",
+    "riverpod",
+    "Routemaster",
+    "Schyler",
+    "tuhin"
+  ],
   "cmake.configureOnOpen": false,
   "cmake.sourceDirectory": "${workspaceFolder}/linux"
 }

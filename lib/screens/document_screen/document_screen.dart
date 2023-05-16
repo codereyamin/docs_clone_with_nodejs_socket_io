@@ -1,5 +1,6 @@
 import 'package:docs_clone_with_nodejs_socket_io/repository/auth_repository.dart';
 import 'package:docs_clone_with_nodejs_socket_io/repository/document_repository.dart';
+import 'package:docs_clone_with_nodejs_socket_io/repository/socket_repository.dart';
 import 'package:docs_clone_with_nodejs_socket_io/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -20,8 +21,10 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titleTextEditingController = TextEditingController(text: "unTitle");
   final quill.QuillController _controller = quill.QuillController.basic();
   ErrorModel? errorModel;
+  SocketRepository socketRepository = SocketRepository();
   @override
   void initState() {
+    socketRepository.joinRoom(widget.id);
     fetchDocumentData();
     super.initState();
   }
