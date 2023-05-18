@@ -8,4 +8,16 @@ class SocketRepository {
   void joinRoom(String documentId) {
     _socketClient.emit('join', documentId);
   }
+
+  void typing(Map<String, dynamic> date) {
+    _socketClient.emit('typing', date);
+  }
+
+  void changeListener(Function(Map<String, dynamic>) function) {
+    _socketClient.on('changes', (data) => function(data));
+  }
+
+  void autoSave(Map<String, dynamic> data) {
+    _socketClient.emit('save', data);
+  }
 }

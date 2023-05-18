@@ -28,7 +28,21 @@ mongoose.connect(DBUrl)
         socket.on('join',(documentId)=>{
             socket.join(documentId);
         });
+
+        socket.on('typing',(data)=>{
+            socket.broadcast.to(data.room).emit('changes',data);
+        });
+        socket.on('save',(data)=>{
+            saveData(data);
+            io.to();
+        });
     });
+
+    const saveData = async (data) =>{
+        let document = await Document.findById(data.room);
+        document.content = data.delta;
+        document = await document.save();
+    };
 
 server.listen(PORT, "0.0.0.0", () => {
     console.log(`my server is ready port with ${PORT}`)
